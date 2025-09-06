@@ -1,0 +1,73 @@
+<svg width="600" height="400" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="400" rx="10" fill="#121212"/>
+  
+  <!-- Background Elements -->
+  <circle cx="100" cy="300" r="80" fill="#1A1A1A"/>
+  <circle cx="500" cy="100" r="60" fill="#1A1A1A"/>
+  <circle cx="300" cy="250" r="150" fill="#0F0F0F"/>
+  
+  <!-- Code lines background -->
+  <g opacity="0.15">
+    <rect x="50" y="50" width="180" height="3" rx="1.5" fill="#3B82F6"/>
+    <rect x="50" y="65" width="140" height="3" rx="1.5" fill="#3B82F6"/>
+    <rect x="50" y="80" width="160" height="3" rx="1.5" fill="#3B82F6"/>
+    <rect x="50" y="95" width="120" height="3" rx="1.5" fill="#3B82F6"/>
+    
+    <rect x="350" y="280" width="180" height="3" rx="1.5" fill="#8B5CF6"/>
+    <rect x="350" y="295" width="140" height="3" rx="1.5" fill="#8B5CF6"/>
+    <rect x="350" y="310" width="160" height="3" rx="1.5" fill="#8B5CF6"/>
+    <rect x="350" y="325" width="120" height="3" rx="1.5" fill="#8B5CF6"/>
+  </g>
+  
+  <!-- Person 1 -->
+  <g transform="translate(150, 150)">
+    <!-- Computer -->
+    <rect x="0" y="30" width="120" height="80" rx="5" fill="#3B82F6"/>
+    <rect x="10" y="40" width="100" height="60" rx="3" fill="#1E1E1E"/>
+    <rect x="20" y="50" width="80" height="10" rx="2" fill="#60A5FA"/>
+    <rect x="20" y="65" width="40" height="5" rx="2" fill="#60A5FA"/>
+    <rect x="20" y="75" width="60" height="5" rx="2" fill="#60A5FA"/>
+    <rect x="20" y="85" width="50" height="5" rx="2" fill="#60A5FA"/>
+    
+    <!-- Person -->
+    <circle cx="60" cy="0" r="25" fill="#1E1E1E"/>
+    <circle cx="60" cy="0" r="18" fill="#2D2D2D"/>
+    <path d="M45 -5 C 60 -15, 75 -5, 75 5" stroke="#60A5FA" stroke-width="2" fill="none"/>
+    <circle cx="52" cy="-5" r="3" fill="#60A5FA"/>
+    <circle cx="68" cy="-5" r="3" fill="#60A5FA"/>
+  </g>
+  
+  <!-- Person 2 -->
+  <g transform="translate(350, 180)">
+    <!-- Computer -->
+    <rect x="0" y="30" width="120" height="80" rx="5" fill="#8B5CF6"/>
+    <rect x="10" y="40" width="100" height="60" rx="3" fill="#1E1E1E"/>
+    <rect x="20" y="50" width="80" height="10" rx="2" fill="#A78BFA"/>
+    <rect x="20" y="65" width="40" height="5" rx="2" fill="#A78BFA"/>
+    <rect x="20" y="75" width="60" height="5" rx="2" fill="#A78BFA"/>
+    <rect x="20" y="85" width="50" height="5" rx="2" fill="#A78BFA"/>
+    
+    <!-- Person -->
+    <circle cx="60" cy="0" r="25" fill="#1E1E1E"/>
+    <circle cx="60" cy="0" r="18" fill="#2D2D2D"/>
+    <path d="M45 5 C 60 -5, 75 5, 75 5" stroke="#A78BFA" stroke-width="2" fill="none"/>
+    <circle cx="52" cy="-5" r="3" fill="#A78BFA"/>
+    <circle cx="68" cy="-5" r="3" fill="#A78BFA"/>
+  </g>
+  
+  <!-- Glowing dots -->
+  <circle cx="100" cy="100" r="4" fill="#3B82F6" filter="drop-shadow(0 0 5px #3B82F6)"/>
+  <circle cx="400" cy="80" r="4" fill="#8B5CF6" filter="drop-shadow(0 0 5px #8B5CF6)"/>
+  <circle cx="200" cy="300" r="4" fill="#3B82F6" filter="drop-shadow(0 0 5px #3B82F6)"/>
+  <circle cx="500" cy="300" r="4" fill="#8B5CF6" filter="drop-shadow(0 0 5px #8B5CF6)"/>
+  
+  <!-- Code Symbols with glow -->
+  <text x="100" y="100" fill="#3B82F6" font-family="monospace" font-size="20" filter="drop-shadow(0 0 2px #3B82F6)">&lt;/&gt;</text>
+  <text x="450" y="320" fill="#8B5CF6" font-family="monospace" font-size="20" filter="drop-shadow(0 0 2px #8B5CF6)">{}</text>
+  <text x="200" y="50" fill="#3B82F6" font-family="monospace" font-size="16" filter="drop-shadow(0 0 1px #3B82F6)">function()</text>
+  <text x="400" y="80" fill="#8B5CF6" font-family="monospace" font-size="16" filter="drop-shadow(0 0 1px #8B5CF6)">class</text>
+  
+  <!-- Binary Background -->
+  <text x="50" y="50" fill="#3B82F6" opacity="0.1" font-family="monospace" font-size="10">01001100 01100101 01100001 01110010 01101110</text>
+  <text x="350" y="350" fill="#8B5CF6" opacity="0.1" font-family="monospace" font-size="10">01000010 01110101 01101001 01101100 01100100</text>
+</svg>
