@@ -53,7 +53,7 @@ const contactValidation = [
   
   body('message')
     .trim()
-    .isLength({ min: 10, max: 1000 })
+    .isLength({ min: 1, max: 1000 })
     .withMessage('Message must be between 10 and 1000 characters')
 ];
 
