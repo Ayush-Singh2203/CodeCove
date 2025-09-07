@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: process.env.FRONTEND_URL || 'https://codecove-sepia.vercel.app',
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -29,7 +29,7 @@ const createTransporter = () => {
     });
   } else {
     // For development/testing - logs emails to console
-    return nodemailer.createTransporter({
+    return nodemailer.createTransport({
       streamTransport: true,
       newline: 'unix',
       buffer: true
