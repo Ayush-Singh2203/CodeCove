@@ -2,61 +2,29 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const { body, validationResult } = require('express-validator');
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: true, // Allow all origins temporarily for debugging
+  origin: ["https://codecove-sepia.vercel.app", "http://localhost:5173", "http://localhost:4173"],
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type"],
 }));
+app.options("*", cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Email transporter configuration
-const createTransporter = () => {
-  if (process.env.EMAIL_SERVICE === 'gmail') {
-    return nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
-    });
-  } else {
-    // For development/testing - logs emails to console
-    return nodemailer.createTransport({
-      streamTransport: true,
-      newline: 'unix',
-      buffer: true
-    });
-  }
-};
-
-// Validation rules for contact form
 const contactValidation = [
-  body('name')
-    .trim()
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Name must be between 2 and 50 characters')
-    .matches(/^[a-zA-Z\s]+$/)
-    .withMessage('Name can only contain letters and spaces'),
-  
-  body('email')
-    .isEmail()
-    .normalizeEmail()
-    .withMessage('Please provide a valid email address'),
-  
-  body('message')
-    .trim()
-    .isLength({ min: 1, max: 1000 })
-    .withMessage('Message must be between 10 and 1000 characters')
+  body('name').trim().isLength({ min: 2, max: 100 }).withMessage('Name must be between 2 and 100 characters'),
+  body('email').isEmail().normalizeEmail().withMessage('Please provide a valid email address'),
+  body('message').trim().isLength({ min: 1, max: 1000 }).withMessage('Message is required'),
 ];
 
 // Routes
@@ -82,88 +50,40 @@ app.get('/api/health', (req, res) => {
 // Contact form endpoint
 app.post('/api/contact', contactValidation, async (req, res) => {
   try {
-    // Check for validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        message: 'Validation failed',
-        errors: errors.array()
-      });
+      return res.status(400).json({ success: false, message: 'Validation failed', errors: errors.array() });
     }
 
     const { name, email, message } = req.body;
 
-    // Create email transporter
-    const transporter = createTransporter();
-
-    // Email content
-    const mailOptions = {
-      from: process.env.EMAIL_USER || 'noreply@codecove.com',
-      to: process.env.CONTACT_EMAIL || 'contact@codecove.com',
+    await resend.emails.send({
+      from: 'CodeCove <onboarding@resend.dev>',
+      to: process.env.CONTACT_EMAIL || 'codecove.edu@gmail.com',
       subject: `New Contact Form Submission from ${name}`,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #2563eb; border-bottom: 2px solid #2563eb; padding-bottom: 10px;">
-            New Contact Form Submission
-          </h2>
-          
-          <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="color: #1e40af; margin-top: 0;">Contact Details:</h3>
+        <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+          <h2 style="color:#2563eb;border-bottom:2px solid #2563eb;padding-bottom:10px;">New Contact Form Submission</h2>
+          <div style="background:#f8fafc;padding:20px;border-radius:8px;margin:20px 0;">
             <p><strong>Name:</strong> ${name}</p>
             <p><strong>Email:</strong> ${email}</p>
           </div>
-          
-          <div style="background-color: #f1f5f9; padding: 20px; border-radius: 8px;">
-            <h3 style="color: #1e40af; margin-top: 0;">Message:</h3>
-            <p style="line-height: 1.6; color: #334155;">${message}</p>
+          <div style="background:#f1f5f9;padding:20px;border-radius:8px;">
+            <h3 style="color:#1e40af;margin-top:0;">Message:</h3>
+            <p style="line-height:1.6;color:#334155;">${message}</p>
           </div>
-          
-          <div style="margin-top: 20px; padding: 15px; background-color: #dbeafe; border-radius: 8px;">
-            <p style="margin: 0; color: #1e40af; font-size: 14px;">
-              <strong>Timestamp:</strong> ${new Date().toLocaleString()}
-            </p>
-          </div>
+          <p style="color:#94a3b8;font-size:12px;margin-top:20px;">Sent at ${new Date().toLocaleString()}</p>
         </div>
       `,
-      text: `
-        New Contact Form Submission
-        
-        Name: ${name}
-        Email: ${email}
-        Message: ${message}
-        
-        Timestamp: ${new Date().toLocaleString()}
-      `
-    };
-
-    // Send email
-    const info = await transporter.sendMail(mailOptions);
-    
-    console.log('Contact form submission received:', {
-      name,
-      email,
-      messageLength: message.length,
-      timestamp: new Date().toISOString()
     });
 
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('Email preview:', nodemailer.getTestMessageUrl(info));
-    }
+    console.log('Contact form submitted:', { name, email, timestamp: new Date().toISOString() });
 
-    res.status(200).json({
-      success: true,
-      message: 'Contact form submitted successfully',
-      timestamp: new Date().toISOString()
-    });
+    res.status(200).json({ success: true, message: 'Message sent successfully!' });
 
   } catch (error) {
-    console.error('Error processing contact form:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error. Please try again later.',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    console.error('Error sending email:', error);
+    res.status(500).json({ success: false, message: 'Failed to send message. Please try again.' });
   }
 });
 
